@@ -2,9 +2,13 @@ const express = require('express');
 const app = express();
 
 app.get('/api', (req, res) => {
-
   const slackName = req.query.slack_name;
   const track = req.query.track;
+
+  if (!slackName || !track) {
+    res.status(400).json({ error: 'Missing slack_name or track query parameter' });
+    return;
+  }
 
   const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
   const date = new Date();
@@ -27,9 +31,10 @@ app.get('/api', (req, res) => {
   };
 
   res.json(response);
-
 });
 
-app.listen(3000, () => {
-  console.log('Server listening on port 3000'); 
+const port = process.env.PORT || 3000;
+
+app.listen(port, () => {
+  console.log(`Server listening on port ${port}`); 
 });
